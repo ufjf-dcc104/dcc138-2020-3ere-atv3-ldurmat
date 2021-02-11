@@ -11,72 +11,68 @@
     <script>
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth * 0.8;
-      canvas.height = window.innerHeight * 0.8;
-      const skelly = new Image();
-
-      skelly.src = "assets/skelly.png";
-      skelly.addEventListener("load", paginaCarregada);
+      const solaire = new Image();
+      solaire.src = "assets/solaire.png";
 
       function desenhaFundo() {
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.8;
         ctx.fillStyle = "darkgreen";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
-      let l = 2;
-      let c = 1;
-      let pose = 2;
+
+      let pose = 0;
       let quadro = 0;
+
       const POSES = [
-        { qmax: 7, pv: 9 },
-        { qmax: 7, pv: 9 },
-        { qmax: 7, pv: 9 },
-        { qmax: 7, pv: 9 },
-        { qmax: 8, pv: 9 },
-        { qmax: 8, pv: 9 },
-        { qmax: 8, pv: 9 },
-        { qmax: 8, pv: 9 },
-        { qmax: 9, pv: 9 },
-        { qmax: 9, pv: 9 },
-        { qmax: 9, pv: 9 },
-        { qmax: 9, pv: 9 },
-        { qmax: 6, pv: 9 },
-        { qmax: 6, pv: 9 },
-        { qmax: 6, pv: 9 },
-        { qmax: 6, pv: 9 },
-        { qmax: 13, pv: 18 },
-        { qmax: 13, pv: 18 },
-        { qmax: 13, pv: 18 },
-        { qmax: 13, pv: 18 },
-        { qmax: 6, pv: 9 },
+        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
+        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
+        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
+        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
       ];
 
-      function paginaCarregada() {}
+      function teclaPressionada(event) {
+        console.log(event.key);
+        switch (event.key) {
+          case "w":
+            pose = 3;
+            break;
+          case "s":
+            pose = 0;
+            break;
+          case "a":
+            pose = 1;
+            break;
+          case "d":
+            pose = 2;
+            break;
+        }
+      }
 
       let t0;
       let dt;
-
       requestAnimationFrame(passo);
 
       function passo(t) {
         t0 = t0 ?? t;
         dt = (t - t0) / 1000;
         desenhaFundo();
+        addEventListener("keydown", teclaPressionada);
         quadro =
-          quadro + 1 >= POSES[pose].qmax ? 0 : quadro + POSES[pose].pv * dt;
+          quadro + 1 > POSES[pose].qmax ? 0 : quadro + POSES[pose].pv * dt;
         ctx.drawImage(
-          skelly,
+          solaire,
           //sx, sy, sw, sh
-          Math.floor(quadro) * 64,
+          Math.floor(quadro) * 32,
           Math.floor(pose) * 64,
-          64,
+          32,
           64,
           //dx, dy, dw, dh
           0,
           0,
-          64,
+          32,
           64
         );
-
         requestAnimationFrame(passo);
         t0 = t;
       }
