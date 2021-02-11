@@ -11,14 +11,32 @@
     <script>
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth * 0.8;
+      canvas.height = window.innerHeight * 0.8;
       const skelly = new Image();
-      skelly.src = "assets/skeleton01.png";
+
+      skelly.src = "assets/skelly.png";
       skelly.addEventListener("load", paginaCarregada);
 
       ctx.fillStyle = "darkgreen";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      function paginaCarregada(){
-        ctx.drawImage(skelly, 0, 0);
+
+      let l = 0;
+      let c = 0;
+      function paginaCarregada() {
+        ctx.drawImage(
+          skelly,
+          //sx, sy, sw, sh
+          c * 64,
+          l * 64,
+          64,
+          64,
+          //dx, dy, dw, dh
+          0,
+          0,
+          64,
+          64
+        );
       }
     </script>
   </body>
