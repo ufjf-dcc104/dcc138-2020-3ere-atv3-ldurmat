@@ -6,7 +6,10 @@
     <title>Exemplo02</title>
   </head>
   <body>
-    <h1>Exemplo 02</h1>
+    <h1>
+      Exemplo 02<br />=> WASD altera direção<br />=> Digite "Praise the sun"
+      para se tornar um Sunbro por 6s
+    </h1>
     <canvas></canvas>
     <script>
       const canvas = document.querySelector("canvas");
@@ -17,22 +20,40 @@
       function desenhaFundo() {
         canvas.width = window.innerWidth * 0.8;
         canvas.height = window.innerHeight * 0.8;
-        ctx.fillStyle = "darkgreen";
+        ctx.fillStyle = "rebeccapurple";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
       let pose = 0;
       let quadro = 0;
+      let mod = 0; //modificador de conjunto de pose
+      const charList =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; //filtro do buffer
+
+      let buffer = "00000000000000"; //string de 14 chars
+      let bufferword = ""; //necessário para reformatar buffer sem editá-lo
 
       const POSES = [
-        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
-        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
-        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
-        { qmax: 3, pv: 6, qmax2: 3, pv2: 8 },
+        { qmax: [3, 3], pv: [6, 9] },
+        { qmax: [3, 3], pv: [6, 9] },
+        { qmax: [3, 3], pv: [6, 9] },
+        { qmax: [3, 3], pv: [6, 9] },
       ];
 
       function teclaPressionada(event) {
         console.log(event.key);
+        if (charList.indexOf(event.key) != -1) {
+          buffer = buffer.slice(1);
+          buffer += event.key;
+          bufferword = buffer.split(" ").join("");
+          bufferword = bufferword.toLowerCase();
+          if (bufferword.slice(2) == "praisethesun") {
+            mod = 1;
+            setTimeout(function () {
+              mod = 0;
+            }, 6000);
+          }
+        }
         switch (event.key) {
           case "w":
             pose = 3;
@@ -59,7 +80,9 @@
         desenhaFundo();
         addEventListener("keydown", teclaPressionada);
         quadro =
-          quadro + 1 > POSES[pose].qmax ? 0 : quadro + POSES[pose].pv * dt;
+          quadro + 1 >= (mod + 1) * POSES[pose].qmax[mod]
+            ? mod * 3
+            : quadro + POSES[pose].pv[mod] * dt;
         ctx.drawImage(
           solaire,
           //sx, sy, sw, sh
@@ -70,8 +93,8 @@
           //dx, dy, dw, dh
           0,
           0,
-          32,
-          64
+          3 * 32,
+          3 * 64
         );
         requestAnimationFrame(passo);
         t0 = t;
