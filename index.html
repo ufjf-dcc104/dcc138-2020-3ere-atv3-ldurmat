@@ -18,17 +18,32 @@
       skelly.src = "assets/skelly.png";
       skelly.addEventListener("load", paginaCarregada);
 
-      ctx.fillStyle = "darkgreen";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      function desenhaFundo() {
+        ctx.fillStyle = "darkgreen";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      let l = 2;
+      let c = 1;
+      function paginaCarregada() {}
 
-      let l = 0;
-      let c = 0;
-      function paginaCarregada() {
+      let t0;
+      let dt;
+
+      requestAnimationFrame(passo);
+
+      function passo(t) {
+        t0 = t0 ?? t;
+        dt = (t - t0) / 1000;
+        desenhaFundo();
+        c = c + 10 * dt;
+        if (c > 6) {
+          c = 0;
+        }
         ctx.drawImage(
           skelly,
           //sx, sy, sw, sh
-          c * 64,
-          l * 64,
+          Math.floor(c) * 64,
+          Math.floor(l) * 64,
           64,
           64,
           //dx, dy, dw, dh
@@ -37,6 +52,9 @@
           64,
           64
         );
+
+        requestAnimationFrame(passo);
+        t0 = t;
       }
     </script>
   </body>
